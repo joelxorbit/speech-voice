@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Speech Navigation</title>
+    <meta name="description" content="Learn more about our voice navigation technology.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">🎤 <span>Voice</span>Nav</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Signup</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="glass-panel page-content">
+            <h2>About Us</h2>
+            <p>Welcome to VoiceNav. We are pioneering the future of web accessibility and interaction by enabling completely hands-free browsing experiences.</p>
+            <p>Our mission is to make the web accessible to everyone, anywhere, through the power of advanced speech recognition.</p>
+            <p>We believe that your voice is the ultimate navigation tool. Say goodbye to endless clicking and scrolling, and simply ask for what you need.</p>
+        </div>
+
+        <!-- Floating Mic Button & Status Box -->
+        <div class="mic-container" style="position: fixed; bottom: 20px; right: 20px; width: 80px; height: 80px; margin: 0;">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <button class="mic-btn" id="micBtn" style="width: 60px; height: 60px; font-size: 1.5rem;">🎤</button>
+        </div>
+        <div class="glass-panel status-box" id="statusBox" style="position: fixed; bottom: 120px; right: 20px; z-index: 1000; min-width: 250px;">
+            <div class="status-text" id="statusText">Status</div>
+            <div class="recognized-text" id="recognizedText" style="font-size: 1.1rem;">Waiting...</div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/speech.js"></script>
+</body>
+</html>

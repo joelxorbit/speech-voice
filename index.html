@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Speech Navigation</title>
+    <meta name="description" content="Speech-controlled modern website navigation.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">🎤 <span>Voice</span>Nav</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Signup</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <h1>Navigate with your voice</h1>
+            <p class="subtitle">Experience the next generation of web browsing. Just speak and let the magic happen.</p>
+        </section>
+
+        <!-- Floating Mic Button -->
+        <div class="mic-container">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <button class="mic-btn" id="micBtn" title="Click to start speaking" aria-label="Start Voice Navigation">🎤</button>
+        </div>
+
+        <!-- Status Box -->
+        <div class="glass-panel status-box" id="statusBox">
+            <div class="status-text" id="statusText">Status</div>
+            <div class="recognized-text" id="recognizedText">Waiting for voice command...</div>
+        </div>
+
+        <!-- Command Guide -->
+        <div class="glass-panel command-guide">
+            <h3>Try Saying</h3>
+            <div class="badges">
+                <span class="badge">"Open Login"</span>
+                <span class="badge">"Go to Signup"</span>
+                <span class="badge">"Take me home"</span>
+                <span class="badge">"About Us"</span>
+                <span class="badge">"Show services"</span>
+                <span class="badge">"Contact page"</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/speech.js"></script>
+</body>
+</html>
