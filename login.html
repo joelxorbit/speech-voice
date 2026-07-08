@@ -3,56 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Speech Navigation</title>
-    <meta name="description" content="Login to your account.">
+    <title>VoiceCare Patient Portal - Secure Login</title>
+    <meta name="description" content="Log in to your VoiceCare Patient Portal.">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav>
-        <a href="index.html" class="logo">🎤 <span>Voice</span>Nav</a>
+        <a href="login.html" class="logo">
+            <div class="logo-icon">🎤</div>
+            <span>VoiceCare</span>
+            <span class="portal-tag">Patient Portal</span>
+        </a>
+        <div id="voiceStatusPill" class="voice-status-pill">
+            <div class="live-dot"></div>
+            <span id="voiceStatusText">Listening</span>
+        </div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="signup.html">Signup</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="login.html" class="active">Patient Login</a></li>
+            <li><a href="signup.html">New Patient Signup</a></li>
         </ul>
     </nav>
 
     <main>
-        <div class="glass-panel page-content" style="max-width: 450px; width: 100%;">
-            <h2 style="text-align: center;">Welcome Back</h2>
-            <p style="text-align: center; margin-bottom: 2rem;">Sign in to continue</p>
+        <div class="glass-panel portal-card">
+            <div class="portal-header">
+                <h1>Patient Portal Login</h1>
+                <p>Sign in to access your medical records and appointments.</p>
+            </div>
             
-            <form onsubmit="event.preventDefault();">
+            <form id="loginForm" class="portal-form">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <label for="email">Patient Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="patient@example.com" required autocomplete="email">
+                        <span class="input-icon">👤</span>
+                    </div>
                 </div>
+
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <span class="input-icon">🔒</span>
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary">Log In</button>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember" checked>
+                        <span>Remember this device</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <span>Sign In</span>
+                    <span>→</span>
+                </button>
             </form>
-            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-                Don't have an account? <a href="signup.html" style="color: var(--accent-hover); text-decoration: none;">Sign Up</a>
-            </p>
+
+            <div class="portal-footer">
+                Don't have a Patient Portal account? <a href="signup.html">Create Patient Profile</a>
+            </div>
         </div>
 
-        <!-- Floating Mic Button & Status Box (Required on every page for voice nav) -->
-        <div class="mic-container" style="position: fixed; bottom: 20px; right: 20px; width: 80px; height: 80px; margin: 0;">
-            <div class="wave"></div>
-            <div class="wave"></div>
-            <button class="mic-btn" id="micBtn" style="width: 60px; height: 60px; font-size: 1.5rem;">🎤</button>
-        </div>
-        <div class="glass-panel status-box" id="statusBox" style="position: fixed; bottom: 120px; right: 20px; z-index: 1000; min-width: 250px;">
-            <div class="status-text" id="statusText">Status</div>
-            <div class="recognized-text" id="recognizedText" style="font-size: 1.1rem;">Waiting...</div>
+        <!-- Voice Assistant Dock (Fixed Bottom) -->
+        <div class="voice-dock">
+            <div class="dock-left">
+                <div class="mic-button-wrapper">
+                    <button id="micBtn" class="mic-btn listening" title="Click to mute/unmute voice recognition">🎤</button>
+                </div>
+                <div class="mic-status-info">
+                    <span class="mic-status-title">Voice Control Active</span>
+                    <span id="micTranscript" class="mic-transcript">Listening for voice commands...</span>
+                </div>
+            </div>
+
+            <div id="visualizer" class="visualizer listening">
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+            </div>
         </div>
     </main>
-
+    
     <script src="js/navigation.js"></script>
     <script src="js/speech.js"></script>
 </body>

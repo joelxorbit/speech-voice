@@ -5,28 +5,39 @@ document.addEventListener('DOMContentLoaded', () => {
     
     navLinks.forEach(link => {
         const linkPath = link.getAttribute('href');
-        // Check if the current location ends with the link path or if both represent the root
-        if (currentLocation.endsWith(linkPath) || (currentLocation.endsWith('/') && linkPath === 'index.html')) {
+        if (currentLocation.endsWith(linkPath) || (currentLocation.endsWith('/') && linkPath === 'login.html')) {
             link.classList.add('active');
         }
     });
 
-    // Optional: Add some smooth reveal animations if elements come into view
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = 1;
-                entry.target.style.transform = 'translateY(0)';
-            }
+    // Handle Form Submissions cleanly without bot speech
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email')?.value || 'User';
+            
+            const statusPill = document.getElementById('voiceStatusPill');
+            const transcript = document.getElementById('micTranscript');
+            if (transcript) transcript.textContent = `Welcome back, ${email}! Accessing portal...`;
+            if (statusPill) statusPill.innerHTML = `✅ Authenticated`;
         });
-    });
+    }
 
-    document.querySelectorAll('.glass-panel').forEach(panel => {
-        if (!panel.classList.contains('status-box') && !panel.classList.contains('command-guide')) {
-            panel.style.opacity = 0;
-            panel.style.transform = 'translateY(20px)';
-            panel.style.transition = 'all 0.6s ease-out';
-            observer.observe(panel);
-        }
-    });
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('fullname')?.value || 'New User';
+            
+            const statusPill = document.getElementById('voiceStatusPill');
+            const transcript = document.getElementById('micTranscript');
+            if (transcript) transcript.textContent = `Registration complete for ${name}! Redirecting...`;
+            if (statusPill) statusPill.innerHTML = `✅ Account Created`;
+
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1800);
+        });
+    }
 });
