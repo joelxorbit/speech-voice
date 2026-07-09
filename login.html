@@ -31,12 +31,26 @@
                 <p>Sign in to access your medical records and appointments.</p>
             </div>
             
+            <div class="voice-guide-banner">
+                <div class="voice-guide-title">
+                    <span>🎤 Voice Commands Active</span>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary);">Speak or click 🎙️ beside any field</span>
+                </div>
+                <div class="voice-chips">
+                    <span class="voice-chip" data-voice-cmd="email patient@voicecare.com">Say: "Email patient@voicecare.com"</span>
+                    <span class="voice-chip" data-voice-cmd="password secure123">Say: "Password secure123"</span>
+                    <span class="voice-chip" data-voice-cmd="fill demo details">✨ Fill Demo Details</span>
+                    <span class="voice-chip" data-voice-cmd="submit">🚀 Submit</span>
+                </div>
+            </div>
+
             <form id="loginForm" class="portal-form">
                 <div class="form-group">
                     <label for="email">Patient Email Address</label>
                     <div class="input-wrapper">
                         <input type="email" id="email" placeholder="patient@example.com" required autocomplete="email">
                         <span class="input-icon">👤</span>
+                        <button type="button" class="field-mic-btn" title="Click to dictate directly into Email field" data-field="email">🎙️</button>
                     </div>
                 </div>
 
@@ -45,6 +59,7 @@
                     <div class="input-wrapper">
                         <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
                         <span class="input-icon">🔒</span>
+                        <button type="button" class="field-mic-btn" title="Click to dictate directly into Password field" data-field="password">🎙️</button>
                     </div>
                 </div>
 

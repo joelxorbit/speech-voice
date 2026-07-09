@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const voiceStatusPill = document.getElementById('voiceStatusPill');
     const visualizer = document.getElementById('visualizer');
 
+    // Currently targeted field for direct voice dictation
+    let activeVoiceField = null;
+
     // Audio Context for subtle UI sound effects (beeps on recognized command)
     let audioCtx = null;
     function initAudio() {
@@ -116,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             micBtn.classList.add('stopped');
         }
         if (visualizer) visualizer.classList.remove('listening');
+        clearActiveFieldMic();
         updateStatus('Muted', 'Voice recognition paused. Click mic to resume.');
     }
 
@@ -128,6 +132,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Field-level mic buttons
+    function clearActiveFieldMic() {
+        document.querySelectorAll('.field-mic-btn').forEach(btn => {
+            btn.classList.remove('listening-field');
+        });
+        activeVoiceField = null;
+    }
+
+    document.querySelectorAll('.field-mic-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const fieldId = btn.getAttribute('data-field');
+            const targetInput = document.getElementById(fieldId);
+
+            if (activeVoiceField === fieldId) {
+                clearActiveFieldMic();
+                updateStatus('Listening', 'Speak a command or field value...');
+            } else {
+                clearActiveFieldMic();
+                activeVoiceField = fieldId;
+                btn.classList.add('listening-field');
+                if (targetInput) targetInput.focus();
+                startListening();
+                playSound('start');
+                updateStatus('Dictating', `Speak value for ${fieldId.toUpperCase()}...`);
+            }
+        });
+    });
+
+    // Voice chips (sample commands guide)
+    document.querySelectorAll('.voice-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const cmd = chip.getAttribute('data-voice-cmd');
+            if (cmd) {
+                updateStatus('Simulating Command', `"${cmd}"`);
+                processVoiceCommand(cmd);
+            }
+        });
+    });
 
     recognition.onstart = () => {
         isListening = true;
@@ -196,13 +240,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!element) return;
         element.value = value;
         element.classList.add('voice-filled');
+        element.dispatchEvent(new Event('input', { bubbles: true }));
+        element.dispatchEvent(new Event('change', { bubbles: true }));
         setTimeout(() => element.classList.remove('voice-filled'), 1500);
         playSound('success');
     }
 
-    function cleanVoiceValue(raw, prefixList) {
+    // Cleaners for specific fields
+    function cleanEmailValue(raw) {
         let val = raw;
-        for (let p of prefixList) {
+        const prefixes = [
+            'enter email address', 'enter email', 'type email address', 'type email',
+            'set email to', 'my email address is', 'my email is', 'user email is',
+            'user email', 'patient email address', 'patient email', 'email address is',
+            'email address', 'email is', 'email', 'patient id is', 'patient id',
+            'id is', 'id'
+        ];
+        for (let p of prefixes) {
             const regex = new RegExp(`^${p}\\s*`, 'i');
             val = val.replace(regex, '');
         }
@@ -210,16 +264,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return val;
     }
 
-    // Process Voice Commands (No Bot Speech output)
+    function cleanTextValue(raw, prefixes) {
+        let val = raw;
+        for (let p of prefixes) {
+            const regex = new RegExp(`^${p}\\s*`, 'i');
+            val = val.replace(regex, '');
+        }
+        return val.trim();
+    }
+
+    function cleanPhoneValue(raw) {
+        let val = raw;
+        const prefixes = [
+            'enter phone number', 'enter phone', 'type phone number', 'type phone',
+            'set phone to', 'my phone number is', 'my phone is', 'phone number is',
+            'phone number', 'phone is', 'phone', 'mobile number', 'mobile is', 'mobile'
+        ];
+        for (let p of prefixes) {
+            const regex = new RegExp(`^${p}\\s*`, 'i');
+            val = val.replace(regex, '');
+        }
+        return val.replace(/\D/g, '');
+    }
+
+    // Process Voice Commands
     function processVoiceCommand(text) {
         // 1. Navigation Commands
-        if (/\b(login|sign in|go to login|open login)\b/i.test(text) && !/\b(submit|button)\b/i.test(text)) {
+        if (/\b(go to login|open login|login page|switch to login)\b/i.test(text)) {
             playSound('navigate');
             updateStatus('Voice Nav', 'Navigating to Login Page...');
             setTimeout(() => window.location.href = 'login.html', 800);
             return;
         }
-        if (/\b(signup|sign up|register|create account|go to signup|open signup)\b/i.test(text) && !/\b(submit|button)\b/i.test(text)) {
+        if (/\b(go to signup|open signup|signup page|register page|switch to signup)\b/i.test(text)) {
             playSound('navigate');
             updateStatus('Voice Nav', 'Navigating to Signup Page...');
             setTimeout(() => window.location.href = 'signup.html', 800);
@@ -227,26 +304,91 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 2. Clear / Reset
-        if (/\b(clear|reset|erase form)\b/i.test(text)) {
+        if (/\b(clear|reset|erase form|clear form|clear all)\b/i.test(text)) {
             const forms = document.querySelectorAll('form');
             forms.forEach(f => f.reset());
+            clearActiveFieldMic();
             playSound('success');
             updateStatus('Cleared', 'All input fields cleared.');
             return;
         }
 
-        // 3. Page specific form fills
-        const currentPage = window.location.pathname.toLowerCase();
-        const isSignup = currentPage.includes('signup.html');
-        const isLogin = currentPage.includes('login.html') || (!isSignup && document.getElementById('loginForm'));
+        // Check which page / form is active
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const isLogin = loginForm !== null || window.location.pathname.toLowerCase().includes('login');
+        const isSignup = signupForm !== null || window.location.pathname.toLowerCase().includes('signup');
+
+        // 3. Demo / Auto Fill Command
+        if (/\b(fill demo details|fill demo|demo details|auto fill|fill all fields|fill details)\b/i.test(text)) {
+            if (isLogin) {
+                const emailInput = document.getElementById('email');
+                const passInput = document.getElementById('password');
+                if (emailInput) flashInput(emailInput, 'patient@voicecare.com');
+                setTimeout(() => {
+                    if (passInput) flashInput(passInput, 'SecureVoice123!');
+                }, 300);
+                updateStatus('Demo Filled', 'Login demo details populated.');
+                return;
+            } else if (isSignup) {
+                const nameInput = document.getElementById('fullname');
+                const emailInput = document.getElementById('email');
+                const phoneInput = document.getElementById('phone');
+                const passInput = document.getElementById('password');
+                const confirmInput = document.getElementById('confirmPassword');
+                const termsCheck = document.getElementById('terms');
+
+                if (nameInput) flashInput(nameInput, 'Joel Roys');
+                setTimeout(() => { if (emailInput) flashInput(emailInput, 'joel@voicecare.com'); }, 200);
+                setTimeout(() => { if (phoneInput) flashInput(phoneInput, '5550192834'); }, 400);
+                setTimeout(() => {
+                    if (passInput) flashInput(passInput, 'VoicePass123!');
+                    if (confirmInput) flashInput(confirmInput, 'VoicePass123!');
+                    if (termsCheck) termsCheck.checked = true;
+                }, 600);
+                updateStatus('Demo Filled', 'Signup demo details populated.');
+                return;
+            }
+        }
+
+        // 4. Check Direct Active / Focused Field Dictation
+        if (activeVoiceField) {
+            const targetEl = document.getElementById(activeVoiceField);
+            if (targetEl) {
+                let formattedVal = text;
+                if (activeVoiceField === 'email') {
+                    formattedVal = cleanEmailValue(text);
+                } else if (activeVoiceField === 'phone') {
+                    formattedVal = cleanPhoneValue(text);
+                } else if (activeVoiceField === 'fullname') {
+                    formattedVal = text.replace(/\b\w/g, c => c.toUpperCase());
+                }
+                flashInput(targetEl, formattedVal);
+                updateStatus('Field Filled', `${activeVoiceField} filled via voice.`);
+                clearActiveFieldMic();
+                return;
+            }
+        }
+
+        // Also check if an input field is currently focused by cursor
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') && !/^(email|password|confirm|phone|name|submit|clear)/i.test(text)) {
+            let val = text;
+            if (activeElement.type === 'email') val = cleanEmailValue(text);
+            else if (activeElement.type === 'tel') val = cleanPhoneValue(text);
+            else if (activeElement.id === 'fullname') val = text.replace(/\b\w/g, c => c.toUpperCase());
+            flashInput(activeElement, val);
+            updateStatus('Active Field Input', `${activeElement.id || 'input'} filled.`);
+            return;
+        }
 
         // ============================
         // LOGIN PAGE COMMANDS
         // ============================
         if (isLogin) {
             // Email input
-            if (/\b(email|my email is|user email|patient id|id)\b/i.test(text)) {
-                let emailVal = cleanVoiceValue(text, ['my email is', 'email is', 'email', 'patient id is', 'patient id', 'id']);
+            if (/\b(email|patient email|patient id|user email)\b/i.test(text)) {
+                let emailVal = cleanEmailValue(text);
                 const emailInput = document.getElementById('email');
                 if (emailInput && emailVal.length > 1) {
                     flashInput(emailInput, emailVal);
@@ -257,7 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Password input
             if (/\b(password|my password is|pass)\b/i.test(text)) {
-                let passVal = text.replace(/^(my password is|password is|password|pass)\s*/i, '').trim();
+                let passVal = cleanTextValue(text, [
+                    'enter password', 'type password', 'set password to',
+                    'my password is', 'password is', 'user password', 'password', 'pass is', 'pass'
+                ]);
                 const passInput = document.getElementById('password');
                 if (passInput && passVal.length > 0) {
                     flashInput(passInput, passVal);
@@ -266,13 +411,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Remember me checkbox
+            if (/\b(remember me|check remember|keep me logged in)\b/i.test(text)) {
+                const rememberBox = document.getElementById('remember');
+                if (rememberBox) {
+                    rememberBox.checked = true;
+                    playSound('success');
+                    updateStatus('Checkbox', 'Remember this device checked.');
+                    return;
+                }
+            }
+            if (/\b(uncheck remember|do not remember|dont remember)\b/i.test(text)) {
+                const rememberBox = document.getElementById('remember');
+                if (rememberBox) {
+                    rememberBox.checked = false;
+                    playSound('success');
+                    updateStatus('Checkbox', 'Remember this device unchecked.');
+                    return;
+                }
+            }
+
             // Submit login
-            if (/\b(submit|log in now|sign in now|login now|login)\b/i.test(text)) {
-                const loginForm = document.getElementById('loginForm');
+            if (/\b(submit|log in now|sign in now|login now|login|sign in)\b/i.test(text)) {
+                const loginFormEl = document.getElementById('loginForm');
                 playSound('success');
                 updateStatus('Success', 'Authenticating...');
-                if (loginForm) {
-                    setTimeout(() => loginForm.dispatchEvent(new Event('submit')), 600);
+                if (loginFormEl) {
+                    setTimeout(() => loginFormEl.dispatchEvent(new Event('submit')), 600);
                 }
                 return;
             }
@@ -283,8 +448,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // ============================
         if (isSignup) {
             // Full Name input
-            if (/\b(name|full name|my name is)\b/i.test(text)) {
-                let nameVal = text.replace(/^(my full name is|my name is|full name is|full name|name is|name)\s*/i, '').trim();
+            if (/\b(name|full name|my name is|legal name)\b/i.test(text)) {
+                let nameVal = cleanTextValue(text, [
+                    'enter full name', 'enter name', 'type full name', 'type name',
+                    'set name to', 'my full name is', 'my name is', 'full name is',
+                    'full name', 'name is', 'name', 'legal name is', 'legal name'
+                ]);
                 const nameInput = document.getElementById('fullname');
                 if (nameInput && nameVal.length > 1) {
                     nameVal = nameVal.replace(/\b\w/g, c => c.toUpperCase());
@@ -296,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Email input
             if (/\b(email|my email is|user email)\b/i.test(text)) {
-                let emailVal = cleanVoiceValue(text, ['my email is', 'email is', 'email']);
+                let emailVal = cleanEmailValue(text);
                 const emailInput = document.getElementById('email');
                 if (emailInput && emailVal.length > 1) {
                     flashInput(emailInput, emailVal);
@@ -307,35 +476,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Phone input
             if (/\b(phone|mobile|contact number)\b/i.test(text)) {
-                let phoneVal = text.replace(/^(my phone is|phone number is|phone is|phone|mobile)\s*/i, '').replace(/\D/g, '');
+                let phoneVal = cleanPhoneValue(text);
                 const phoneInput = document.getElementById('phone');
-                if (phoneInput && phoneVal.length > 3) {
+                if (phoneInput && phoneVal.length > 2) {
                     flashInput(phoneInput, phoneVal);
                     updateStatus('Voice Input', `Phone -> ${phoneVal}`);
                     return;
                 }
             }
 
-            // Password & Confirm Password
-            if (/\b(password|my password is|pass)\b/i.test(text)) {
-                let passVal = text.replace(/^(my password is|password is|password|pass)\s*/i, '').trim();
+            // Confirm Password input explicitly
+            if (/\b(confirm password|reenter password|verify password)\b/i.test(text)) {
+                let passVal = cleanTextValue(text, [
+                    'enter confirm password', 'confirm password is', 'confirm password',
+                    'reenter password is', 'reenter password', 'verify password'
+                ]);
+                const confirmInput = document.getElementById('confirmPassword');
+                if (confirmInput && passVal.length > 0) {
+                    flashInput(confirmInput, passVal);
+                    updateStatus('Voice Input', 'Confirm Password filled.');
+                    return;
+                }
+            }
+
+            // Password input
+            if (/\b(password|create password|my password is|pass)\b/i.test(text)) {
+                let passVal = cleanTextValue(text, [
+                    'enter create password', 'create password is', 'create password',
+                    'enter password', 'type password', 'set password to',
+                    'my password is', 'password is', 'password', 'pass is', 'pass'
+                ]);
                 const passInput = document.getElementById('password');
                 const confirmInput = document.getElementById('confirmPassword');
                 if (passInput && passVal.length > 0) {
                     flashInput(passInput, passVal);
-                    if (confirmInput) confirmInput.value = passVal;
+                    if (confirmInput && !confirmInput.value) {
+                        confirmInput.value = passVal;
+                    }
                     updateStatus('Voice Input', 'Password filled.');
                     return;
                 }
             }
 
+            // Terms checkbox
+            if (/\b(agree|accept terms|check terms|terms)\b/i.test(text)) {
+                const termsBox = document.getElementById('terms');
+                if (termsBox) {
+                    termsBox.checked = true;
+                    playSound('success');
+                    updateStatus('Checkbox', 'Terms & Privacy Policy accepted.');
+                    return;
+                }
+            }
+
             // Submit registration
-            if (/\b(submit|sign up now|register now|sign up|register)\b/i.test(text)) {
-                const signupForm = document.getElementById('signupForm');
+            if (/\b(submit|create account|register now|sign up now|register|sign up)\b/i.test(text)) {
+                const signupFormEl = document.getElementById('signupForm');
                 playSound('success');
                 updateStatus('Success', 'Creating Account...');
-                if (signupForm) {
-                    setTimeout(() => signupForm.dispatchEvent(new Event('submit')), 600);
+                if (signupFormEl) {
+                    setTimeout(() => signupFormEl.dispatchEvent(new Event('submit')), 600);
                 }
                 return;
             }
@@ -345,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStatus('Unrecognized', `Command "${text}" not matched.`);
     }
 
-    // Automatically start speech recognition on window load (silent, no bot voice output)
+    // Automatically start speech recognition on window load
     window.addEventListener('load', () => {
         try {
             startListening();
@@ -354,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Also auto-start on any first document click/keypress if not listening
+    // Unlock speech recognition on any first document interaction
     const unlockAutoStart = () => {
         if (!isListening) {
             startListening();
@@ -365,3 +565,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', unlockAutoStart);
     document.addEventListener('keydown', unlockAutoStart);
 });
+

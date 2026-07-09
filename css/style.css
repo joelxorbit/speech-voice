@@ -4,21 +4,21 @@
     --bg-dark-1: #070d18;
     --bg-dark-2: #0d1b2e;
     --bg-dark-3: #11223b;
-    
+
     --accent-cyan: #06b6d4;
     --accent-teal: #14b8a6;
     --accent-blue: #3b82f6;
     --accent-hover: #22d3ee;
-    
+
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --error-color: #ef4444;
-    
+
     --glass-bg: rgba(17, 34, 59, 0.65);
     --glass-card: rgba(13, 27, 46, 0.75);
     --glass-border: rgba(6, 182, 212, 0.25);
     --glass-border-hover: rgba(6, 182, 212, 0.6);
-    
+
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
@@ -32,8 +32,8 @@
 
 body {
     background: radial-gradient(circle at 15% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-                linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 100%);
+        radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+        linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 100%);
     color: var(--text-primary);
     font-family: 'Outfit', 'Inter', sans-serif;
     min-height: 100vh;
@@ -127,7 +127,8 @@ nav {
     gap: 0.5rem;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--text-primary);
     background: rgba(6, 182, 212, 0.15);
     border: 1px solid rgba(6, 182, 212, 0.3);
@@ -161,9 +162,20 @@ nav {
 }
 
 @keyframes ping {
-    0% { transform: scale(1); opacity: 1; }
-    75% { transform: scale(2); opacity: 0; }
-    100% { transform: scale(1); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    75% {
+        transform: scale(2);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
 }
 
 /* Main Container */
@@ -192,8 +204,15 @@ main {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .portal-header {
@@ -271,9 +290,10 @@ main {
     align-items: center;
 }
 
-.input-wrapper input, .input-wrapper select {
+.input-wrapper input,
+.input-wrapper select {
     width: 100%;
-    padding: 0.85rem 1rem 0.85rem 2.75rem;
+    padding: 0.85rem 2.85rem 0.85rem 2.75rem;
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(7, 13, 24, 0.65);
@@ -283,39 +303,93 @@ main {
     transition: all 0.25s ease;
 }
 
-.input-wrapper select {
-    cursor: pointer;
-}
-
-.input-wrapper select option {
-    background: var(--bg-dark-2);
-    color: var(--text-primary);
-}
-
-.input-icon {
+.field-mic-btn {
     position: absolute;
-    left: 1rem;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    pointer-events: none;
-    transition: color 0.25s ease;
-}
-
-.input-wrapper input:focus, .input-wrapper select:focus {
-    outline: none;
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
-    background: rgba(7, 13, 24, 0.9);
-}
-
-.input-wrapper input:focus ~ .input-icon {
+    right: 0.7rem;
+    background: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.3);
     color: var(--accent-cyan);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+}
+
+.field-mic-btn:hover {
+    background: var(--accent-cyan);
+    color: #ffffff;
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.5);
+}
+
+.field-mic-btn.listening-field {
+    background: var(--success-color);
+    color: #ffffff;
+    border-color: var(--success-color);
+    animation: pulseGlow 1.2s infinite;
+}
+
+/* Voice Guide Banner */
+.voice-guide-banner {
+    background: rgba(6, 182, 212, 0.08);
+    border: 1px solid rgba(6, 182, 212, 0.25);
+    border-radius: 16px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.voice-guide-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+}
+
+.voice-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.voice-chip {
+    background: rgba(13, 27, 46, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.voice-chip:hover {
+    border-color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.18);
+    transform: translateY(-1px);
 }
 
 /* Voice Filled Animation */
 @keyframes voiceFlash {
-    0% { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.6); }
-    100% { border-color: rgba(255, 255, 255, 0.12); box-shadow: none; }
+    0% {
+        border-color: var(--accent-cyan);
+        box-shadow: 0 0 18px rgba(6, 182, 212, 0.7);
+        background: rgba(6, 182, 212, 0.15);
+    }
+
+    100% {
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: none;
+    }
 }
 
 .voice-filled {
@@ -451,9 +525,17 @@ main {
 }
 
 @keyframes pulseGlow {
-    0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-    50% { box-shadow: 0 0 28px rgba(16, 185, 129, 0.9); }
-    100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+    0% {
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 28px rgba(16, 185, 129, 0.9);
+    }
+
+    100% {
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
 }
 
 .mic-status-info {
@@ -495,15 +577,36 @@ main {
     transition: height 0.15s ease;
 }
 
-.listening .visualizer-bar:nth-child(1) { animation: bounceBar 0.8s infinite 0.1s; }
-.listening .visualizer-bar:nth-child(2) { animation: bounceBar 0.8s infinite 0.3s; }
-.listening .visualizer-bar:nth-child(3) { animation: bounceBar 0.8s infinite 0.2s; }
-.listening .visualizer-bar:nth-child(4) { animation: bounceBar 0.8s infinite 0.4s; }
-.listening .visualizer-bar:nth-child(5) { animation: bounceBar 0.8s infinite 0.15s; }
+.listening .visualizer-bar:nth-child(1) {
+    animation: bounceBar 0.8s infinite 0.1s;
+}
+
+.listening .visualizer-bar:nth-child(2) {
+    animation: bounceBar 0.8s infinite 0.3s;
+}
+
+.listening .visualizer-bar:nth-child(3) {
+    animation: bounceBar 0.8s infinite 0.2s;
+}
+
+.listening .visualizer-bar:nth-child(4) {
+    animation: bounceBar 0.8s infinite 0.4s;
+}
+
+.listening .visualizer-bar:nth-child(5) {
+    animation: bounceBar 0.8s infinite 0.15s;
+}
 
 @keyframes bounceBar {
-    0%, 100% { height: 6px; }
-    50% { height: 24px; }
+
+    0%,
+    100% {
+        height: 6px;
+    }
+
+    50% {
+        height: 24px;
+    }
 }
 
 /* Comprehensive Mobile Responsive Layout */
@@ -554,7 +657,8 @@ main {
     }
 
     /* Prevent iOS auto-zoom on input tap by enforcing 16px minimum */
-    .input-wrapper input, .input-wrapper select {
+    .input-wrapper input,
+    .input-wrapper select {
         font-size: 16px;
         padding: 0.85rem 1rem 0.85rem 2.6rem;
     }
