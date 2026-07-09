@@ -287,23 +287,103 @@ document.addEventListener('DOMContentLoaded', () => {
         return val.replace(/\D/g, '');
     }
 
+    // Helper: Focus input and activate its field mic
+    function focusAndActivateField(inputEl) {
+        if (!inputEl) return;
+        inputEl.focus();
+        clearActiveFieldMic();
+        activeVoiceField = inputEl.id;
+        const micBtnEl = document.querySelector(`.field-mic-btn[data-field="${inputEl.id}"]`);
+        if (micBtnEl) micBtnEl.classList.add('listening-field');
+        playSound('navigate');
+        updateStatus('Focus Nav', `Focused ${inputEl.id.toUpperCase()}`);
+    }
+
     // Process Voice Commands
     function processVoiceCommand(text) {
-        // 1. Navigation Commands
-        if (/\b(go to login|open login|login page|switch to login)\b/i.test(text)) {
+        // Check which page / form is active
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const isLogin = loginForm !== null || window.location.pathname.toLowerCase().includes('login');
+        const isSignup = signupForm !== null || window.location.pathname.toLowerCase().includes('signup');
+
+        // 1. Page-to-Page Navigation Commands
+        if (/\b(go to login|open login|login page|switch to login|navigate to login|show login|patient login page)\b/i.test(text) || (!isLogin && /\b(login|sign in|patient login)\b/i.test(text))) {
             playSound('navigate');
             updateStatus('Voice Nav', 'Navigating to Login Page...');
-            setTimeout(() => window.location.href = 'login.html', 800);
+            setTimeout(() => window.location.href = 'login.html', 600);
             return;
         }
-        if (/\b(go to signup|open signup|signup page|register page|switch to signup)\b/i.test(text)) {
+        if (/\b(go to signup|open signup|signup page|register page|switch to signup|navigate to signup|show signup|new patient page|create account page)\b/i.test(text) || (!isSignup && /\b(signup|sign up|register|new patient)\b/i.test(text))) {
             playSound('navigate');
             updateStatus('Voice Nav', 'Navigating to Signup Page...');
-            setTimeout(() => window.location.href = 'signup.html', 800);
+            setTimeout(() => window.location.href = 'signup.html', 600);
+            return;
+        }
+        if (/\b(go to home|home page|welcome page|welcome|go home)\b/i.test(text)) {
+            playSound('navigate');
+            updateStatus('Voice Nav', 'Navigating to Welcome Page...');
+            setTimeout(() => window.location.href = 'index.html', 600);
             return;
         }
 
-        // 2. Clear / Reset
+        // 2. Field-to-Field Speech Navigation (Next / Previous / Focus specific field)
+        if (/\b(next field|next input|go to next|next)\b/i.test(text)) {
+            const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]), select'));
+            if (inputs.length > 0) {
+                const currentIdx = inputs.indexOf(document.activeElement);
+                const nextIdx = (currentIdx + 1) % inputs.length;
+                focusAndActivateField(inputs[nextIdx]);
+            }
+            return;
+        }
+        if (/\b(previous field|previous input|go back field|last field|previous)\b/i.test(text)) {
+            const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]), select'));
+            if (inputs.length > 0) {
+                const currentIdx = inputs.indexOf(document.activeElement);
+                const prevIdx = (currentIdx - 1 + inputs.length) % inputs.length;
+                focusAndActivateField(inputs[prevIdx]);
+            }
+            return;
+        }
+
+        // Focus Specific Field by Name
+        if (/\b(focus email|go to email|email field)\b/i.test(text)) {
+            focusAndActivateField(document.getElementById('email'));
+            return;
+        }
+        if (/\b(focus password|go to password|password field)\b/i.test(text)) {
+            focusAndActivateField(document.getElementById('password'));
+            return;
+        }
+        if (/\b(focus name|go to name|name field|focus full name)\b/i.test(text)) {
+            focusAndActivateField(document.getElementById('fullname'));
+            return;
+        }
+        if (/\b(focus phone|go to phone|phone field|mobile field)\b/i.test(text)) {
+            focusAndActivateField(document.getElementById('phone'));
+            return;
+        }
+        if (/\b(focus confirm|go to confirm|confirm password field)\b/i.test(text)) {
+            focusAndActivateField(document.getElementById('confirmPassword'));
+            return;
+        }
+
+        // 3. Page Scrolling Commands
+        if (/\b(scroll down|page down|go down|bottom)\b/i.test(text)) {
+            window.scrollBy({ top: 350, behavior: 'smooth' });
+            playSound('navigate');
+            updateStatus('Voice Nav', 'Scrolled down.');
+            return;
+        }
+        if (/\b(scroll up|page up|go up|top)\b/i.test(text)) {
+            window.scrollBy({ top: -350, behavior: 'smooth' });
+            playSound('navigate');
+            updateStatus('Voice Nav', 'Scrolled up.');
+            return;
+        }
+
+        // 4. Clear / Reset Form
         if (/\b(clear|reset|erase form|clear form|clear all)\b/i.test(text)) {
             const forms = document.querySelectorAll('form');
             forms.forEach(f => f.reset());
@@ -312,12 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStatus('Cleared', 'All input fields cleared.');
             return;
         }
-
-        // Check which page / form is active
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const isLogin = loginForm !== null || window.location.pathname.toLowerCase().includes('login');
-        const isSignup = signupForm !== null || window.location.pathname.toLowerCase().includes('signup');
 
         // 3. Demo / Auto Fill Command
         if (/\b(fill demo details|fill demo|demo details|auto fill|fill all fields|fill details)\b/i.test(text)) {
