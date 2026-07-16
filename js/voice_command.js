@@ -161,7 +161,20 @@
             return;
         }
 
-        // 2. Submit & Login Action Commands ("login", "speech login", "click login", "submit", etc.) checked FIRST!
+        // 2. Next Field Command ("ok", "okay", "speech ok", "next", "next field", "tab", "move next") checked early!
+        const isNextCommand = /^(?:speech\s+)?(?:go\s+to\s+)?(?:ok|okay|next|next field|move next|tab|go next)$/i.test(lowerText) || lowerText === 'ok' || lowerText === 'okay' || lowerText === 'next';
+        if (isNextCommand) {
+            const activeEl = document.activeElement || window._vaLastTouchedField;
+            if (activeEl && (activeEl.type === 'submit' || activeEl.type === 'button')) {
+                speakResponse('Submitting');
+                activeEl.click();
+            } else {
+                moveToNextField();
+            }
+            return;
+        }
+
+        // 3. Submit & Login Action Commands ("login", "speech login", "click login", "submit", etc.) checked FIRST!
         const isLoginCommand = /^(?:speech\s+)?(?:click\s+)?(?:login|sign in|login button)$/i.test(lowerText) || lowerText.includes('login button') || lowerText.includes('click login') || lowerText.includes('speech login') || lowerText === 'login';
         const isSubmitCommand = /^(?:click\s+)?(?:submit|submit button|register|sign up|click register|apply|click apply|start process)$/i.test(lowerText) || lowerText === 'submit' || lowerText === 'register' || lowerText === 'apply';
 
@@ -304,6 +317,58 @@
     }
 
     /**
+     * Move focus to the next form field when user says "ok" / "next"
+     */
+    function moveToNextField() {
+        const focusableSelectors = 'input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled]), textarea:not([disabled])';
+        const allFields = Array.from(document.querySelectorAll(focusableSelectors)).filter(el => {
+            return !el.closest('#voice-assistant-dock') && !el.closest('#va-help-modal-backdrop') && el.offsetParent !== null && el.style.display !== 'none';
+        });
+
+        if (allFields.length === 0) {
+            speakResponse('No form fields found on this page');
+            return;
+        }
+
+        let currentEl = document.activeElement;
+        if (!currentEl || !allFields.includes(currentEl)) {
+            currentEl = window._vaLastTouchedField || null;
+        }
+
+        let nextIndex = 0;
+        if (currentEl && allFields.includes(currentEl)) {
+            const currentIndex = allFields.indexOf(currentEl);
+            nextIndex = (currentIndex + 1) % allFields.length;
+        }
+
+        const nextEl = allFields[nextIndex];
+        if (nextEl) {
+            nextEl.focus();
+            window._vaLastTouchedField = nextEl;
+
+            let fieldLabel = '';
+            if (nextEl.getAttribute('placeholder')) {
+                fieldLabel = nextEl.getAttribute('placeholder');
+            } else if (nextEl.getAttribute('name')) {
+                fieldLabel = nextEl.getAttribute('name').toUpperCase();
+            } else {
+                const tr = nextEl.closest('tr');
+                if (tr && tr.querySelector('th, td')) {
+                    fieldLabel = tr.querySelector('th, td').textContent.trim();
+                }
+            }
+
+            if (nextEl.tagName === 'SELECT') {
+                speakResponse(fieldLabel ? `Moved to ${fieldLabel} dropdown` : 'Moved to next dropdown');
+            } else if (nextEl.type === 'submit' || nextEl.type === 'button') {
+                speakResponse(fieldLabel ? `Moved to ${fieldLabel} button` : 'Moved to submit button');
+            } else {
+                speakResponse(fieldLabel ? `Moved to ${fieldLabel}` : 'Moved to next field');
+            }
+        }
+    }
+
+    /**
      * Smart Field Matcher & Populator across All Pages
      */
     function fillFormField(fieldName, value) {
@@ -395,6 +460,7 @@
             element.dispatchEvent(new Event('input', { bubbles: true }));
             element.dispatchEvent(new Event('change', { bubbles: true }));
         }
+        window._vaLastTouchedField = element;
     }
 
     /**
@@ -560,6 +626,7 @@
                         <div class="va-command-item"><span class="va-command-badge">"enter mobile 9876543210"</span><span class="va-command-desc">Fills Mobile No. field</span></div>
                         <div class="va-command-item"><span class="va-command-badge">"enter name John Doe"</span><span class="va-command-desc">Fills Name field</span></div>
                         <div class="va-command-item"><span class="va-command-badge">Focus any field & speak</span><span class="va-command-desc">Dictate directly without clicking mic</span></div>
+                        <div class="va-command-item"><span class="va-command-badge">"ok" / "next"</span><span class="va-command-desc">Move focus to next input box</span></div>
                         <div class="va-command-item"><span class="va-command-badge">"login" / "click login"</span><span class="va-command-desc">Triggers Login button on page</span></div>
                         <div class="va-command-item"><span class="va-command-badge">"submit" / "click submit"</span><span class="va-command-desc">Submits the active form</span></div>
                     </div>
@@ -609,6 +676,11 @@
     // Initialize & Automatically Start Mic on Page Load
     function bootVoiceAssistant() {
         renderVoiceAssistantUI();
+        document.addEventListener('focusin', (e) => {
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) {
+                window._vaLastTouchedField = e.target;
+            }
+        });
         // Immediately start automatic continuous listening on page load across all pages!
         startAutoListening();
     }
