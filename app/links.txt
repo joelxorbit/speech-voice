@@ -1,0 +1,15 @@
+
+http://localhost:8080/toll-plaza/app/payment.jsp?uname=sanjai&src=Trichy&dest=Chennai
+
+
+http://localhost:8080/toll-plaza/app/pay2.jsp?uname=sanjai&src=Trichy&dest=Chennai&tway=1&vno=3422
+
+
+24568923#Trichy#Chennai#3422#CAR#1#315
+
+
+
+http://localhost:8080/toll-plaza/app/pay3.jsp?uname=sanjai&src=Trichy&dest=Chennai&tway=1&vno=3422&vtype=CAR&cardpay=2&payment=1&bank=KVB&cardno=245678&tdate12=14-04-2015&amount=315
+
+
+http://localhost:8080/toll-plaza/app/pay4.jsp?uname=sanjai&pid=1&key=20101

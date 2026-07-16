@@ -1,0 +1,335 @@
+/* CSS Document */
+/*-------------GENERAL---------------*/
+body{
+	padding:0; margin:0; background:url(images/index_02-05.gif) repeat-x 0 0 #e9fcd1;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	}
+.body2
+{
+background-color:#000000;
+background-image:none;
+}	
+div, p, h1, h2, h3, h4, img{
+	padding:0; margin:0;
+	}
+ul{
+	list-style-type:none; padding:0; margin:0;
+	}
+.txt1 {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #5AA026;
+}
+.box
+{
+	background-color:#FFFFCC;
+	color:#000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	width: 100px;
+}
+.bg2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	font-weight: bold;
+	color: #000000;
+	background-color: #99CCFF;
+}
+
+.heading {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	line-height: 80px;
+	color: #FF99FF;
+	height: 150px;
+	font-weight: bold;
+	background-image: url(images/pethdr.jpg);
+	background-repeat: repeat-x;
+	background-position: center 0px;
+	
+}
+.bor {
+	border: 1px dotted #666666;
+}
+
+.msg2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #22A908;
+}
+
+.txt2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #006633;
+}
+.subhead {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	color: #FFFFFF;
+	background-color: #0066FF;
+	height: 25px;
+}
+.subhead a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: none;
+}
+.subhead a:hover {
+	color: #003399;
+	text-decoration: none;
+}
+.txt1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	color: #000000;
+}
+
+.msg {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FF0000;
+}
+.border {
+	font-family: Arial, Helvetica, sans-serif;
+	border: 1px solid #0066FF;
+}
+.txt3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #003399;
+}
+
+
+.bank{
+	line-height:0px; font-size:0px; clear:both;
+	}
+/*------------------------------header---------------------*/
+#header{
+	width:721px;
+	margin:0 auto;
+	padding:0;
+	height:438px;
+	
+}
+.bot-border {
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #00CC00;
+}
+
+#header img{display:block; margin:0 0 0 34px; padding:0; position:absolute;
+}
+#header ul{width:390px; display:block; margin:70px 0 0 331px; padding:0 0 0 0; position:absolute;
+}
+#header ul .li_1{width:64px; display:block; margin:0 0 0 14px; padding:0 0 0 0; background:url(images/index_06.gif) no-repeat 0 0; height:64px; float:left; text-align:center; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#336804;
+}
+#header ul .li_1 a{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_06.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#336804; 
+}
+#header ul .li_1 a:hover{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_06_a.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#000000; 
+}
+.bg1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #669700;
+	line-height: 25px;
+	height: 25px;
+}
+
+#header ul .li_2{width:64px; display:block; margin:0 0 0 14px; padding:0 0 0 0; background:url(images/index_08.gif) no-repeat 0 0; height:64px; float:left; text-align:center; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#336804; 
+}
+#header ul .li_2 a{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_08.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#336804; 
+}
+#header ul .li_2 a:hover{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_08_a.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#000000; 
+}
+#header ul .li_3{width:64px; display:block; margin:0 0 0 14px; padding:0 0 0 0; background:url(images/index_10.gif) no-repeat 0 0; height:64px; float:left; text-align:center; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#336804; 
+}
+#header ul .li_3 a{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_10.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#336804; 
+}
+#header ul .li_3 a:hover{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_10_a.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#000000; 
+}
+#header ul .li_4{width:64px; display:block; margin:0 0 0 14px; padding:0 0 0 0; background:url(images/index_12.gif) no-repeat 0 0; height:64px; float:left; text-align:center; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#336804; 
+}
+#header ul .li_4 a{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_12.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#336804; 
+}
+#header ul .li_4 a:hover{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_12_a.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#000000; 
+}
+#header ul .li_5{width:64px; display:block; margin:0 0 0 14px; padding:0 0 0 0; background:url(images/index_14.gif) no-repeat 0 0; height:64px; float:left; text-align:center; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#336804;  
+}
+#header ul .li_5 a{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_14.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#336804;
+}
+#header ul .li_5 a:hover{width:64px; display:block; margin:0 0 0 0; padding:50px 0 0 0; background:url(images/index_14_a.gif) no-repeat 0 0; height:14px; float:left; text-decoration:none; color:#000000; 
+}
+#header h3{width:267px; display:block; margin:321px 0 0 196px; padding:0 0 0 0; position:absolute; font-family:Bauhaus, "Bauhaus 93", "Beast Machines"; font-size:28px; color:#ffffff;
+}
+#header p{width:482px; display:block; margin:360px 0 0 196px; padding:0 0 0 0; position:absolute; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#aae67b; text-align:justify;
+}
+/*------------------------------header end--------------------*/
+/*------------------------------body---------------------*/
+#body{width:721px; margin:0 auto; padding:0; background:url(images/body_bg.gif) repeat-y #FFFFFF 0 0; height:470px;
+}
+/*------------------------------body left---------------------*/
+#body #left{width:300px; display:block; margin:0 0 0 0; padding:0 0 0 0; float:left;
+}
+#body #left #div{width:204px; display:block; margin:41px 0 0 56px; padding:0 0 0 0; background:url(images/bg_06.gif) no-repeat 0 0; height:413px;
+}
+#body #left #div img{display:block; margin:0 0 0 0; padding:18px 0 0 32px;
+}
+#body #left #div p{width:171px; display:block; margin:34px 0 0 17px; padding:0 0 0 0; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#357506; text-align:justify;
+}
+#body #left #div ul{width:190px; display:block; margin:31px 0 0 13px; padding:0 0 0px 0; position:relative;
+}
+#body #left #div ul li{display:block; margin:0 0 10px 0; padding:0 0 0 15px; background:url(images/index_31.gif) no-repeat 0 4px; font-family:Verdana, Arial, Helvetica, sans-serif; color:#498315; font-weight:bold; font-size:11px;
+}
+#body #left #div ul li a{color:#498315; text-decoration:none;
+}
+#body #left #div ul li a:hover{color:#000000; text-decoration:none;
+}
+#body #left #div dl{width:95px; height:20px; display:block; margin:30px 0 0 20px; padding:7px 0 0 0; background:url(images/index_41.gif) no-repeat 0 0; text-align:center; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#FFFFFF;
+}
+#body #left #div dl a{color:#FFFFFF; text-decoration:none;
+}
+#body #left #div dl a:hover{color:#000000; text-decoration:none;
+}
+
+/*------------------------------body left end---------------------*/
+/*------------------------------body right---------------------*/
+#body #right{width:421px; display:block; margin:0 0 0 0; padding:0 0 0 0; float:left;
+}
+#body #right .img_1{display:block; margin:0 0 0 0; padding:49px 0 0 0; position:relative;
+}
+#body #right  .p_1{
+	width:400px;
+	display:block;
+	margin:20px 0 0 0;
+	padding:0 0 0 0;
+	position:relative;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color:#666666;
+	text-align:justify;
+	line-height: 25px;
+}
+#body #right  .p_1 a{text-decoration:none; color:#5da228;
+}
+#body #right  .p_1 a:hover{text-decoration:none; color:#000000;
+}
+#body #right .img_2{display:block; margin:0 0 0 0; padding:49px 0 0 0; position:relative;
+}
+#body #right  .p_2{width:400px; display:block; margin:20px 0 0 0; padding:0 0 0 0; position:relative; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#ababab; text-align:justify;
+}
+#body #right  .p_3{width:273px; display:block; margin:20px 0 0 0; padding:0 0 0 0; position:absolute; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; color:#ababab; text-align:justify;
+}
+#body #right  .p_3 a{text-decoration:none; color:#5da228;
+}
+#body #right  .p_3 a:hover{text-decoration:none; color:#000000;
+}
+#body #right .img_3{display:block; margin:20px 0 0 300px; padding:0 0 0 0; position:absolute;
+}
+#body #right h3{display:block; margin:0 0 0 0; padding:40px 0 0 0; position:relative; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:13px; color:#80a035; font-weight:bold;
+}
+/*------------------------------body right---------------------*/
+/*------------------------------body end---------------------*/
+/*------------------------------footer---------------------*/
+#footer{width:721px; margin:0 auto; padding:0; background:url(images/body_bg.gif) repeat-y #FFFFFF 0 0; height:96px;
+}
+#footer #sub{width:688px; margin:0 auto; padding:0; float:right; background:url(images/index_54-58.gif) repeat-x 0 0 #5ba127; height:96px;
+}
+#footer #sub ul{width:390px; display:block; margin:0 auto; padding:15px 0 0 0; position:relative;
+}
+#footer #sub ul li{display:block; margin:0 0 0 18px; padding:0 0 0 0; float:left; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px; color:#8ad34f;
+}
+#footer #sub ul li a{color:#8ad34f; text-decoration:none;
+}
+#footer #sub ul li a:hover{color:#ffffff; text-decoration:none;
+}
+#footer #sub p{width:300px; display:block; margin:0 auto; padding:15px 0 0 0; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px; color:#86c555;
+}
+
+
+
+/*------------------------------footer end---------------------*/
+/*------------------------------footer end---------------------*/
+
+#menu {
+	height: 40px;
+	/*background: url(images/menu4.jpg) repeat-x;*/
+	background-color:#0099FF;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	z-index: 30;
+	color: #000000;
+	
+	line-height: 30px;
+}
+#menu li {
+	display:inline;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+}
+
+#menu li a {
+	width: 140px;
+	height: 35px;
+	text-decoration: none;
+	text-align: center;
+	padding-top: 6px;
+	font-size: 1.1em;
+	font-weight: bold;
+	color: #000000;
+	
+	display: block;
+	margin: 0 1px 0 0;
+
+}
+#menu li a:hover {
+	/*background: url(images/menu_r3.jpg) repeat-x;*/
+	background-color:#003399;
+	line-height: 30px;
+	height: 35px;
+	color: #FFFFFF;
+}
+#menu div
+{
+	position: absolute;
+	visibility: hidden;
+	margin: 0;
+	padding: 0;
+	border: 0px solid #000000;
+	background-color:#0099FF;
+}
+#menu div a
+{
+	position: relative;
+	display: block;
+	margin: 0;
+	width:150px;
+	text-align: left;
+	text-decoration: none;
+	color:#FFFFFF;
+	background-color:#0099FF;
+	font-size: 1.1em;
+}
+#menu div a:hover
+{
+color:#FFFFCC;
+background-color:#003399;
+font-size: 1.1em;
+}
